@@ -1,0 +1,26 @@
+name: build-and-test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ci:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]   # можно оставить только ubuntu-latest, если хочешь
+        build_type: [Debug]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure CMake
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
+      - name: Build
+        run: cmake --build build --config ${{ matrix.build_type }}
+
+      - name: Test (CTest)
+        run: ctest --test-dir build --output-on-failure -C ${{ matrix.build_type }}
