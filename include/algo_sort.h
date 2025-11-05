@@ -13,5 +13,7 @@ void quick_sort_int(int* a, size_t n);
 void merge_sort_int(int* a, size_t n);
 void heap_sort_int(int* a, size_t n);
 static void sift_down(int* a, size_t n, size_t i);
+/*new*/
+void counting_sort_int_nonneg(int* a, size_t n, int max_val);
 
 #endif /* ALGO_SORT_H */

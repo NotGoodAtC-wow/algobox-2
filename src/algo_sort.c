@@ -1,6 +1,7 @@
 #include "algo_sort.h"
 #include "algo_utils.h"
 #include <stdlib.h> /* malloc, free */
+#include <assert.h>
 
 /* -------------------- Basic -------------------- */
 void bubble_sort_int(int* a, size_t n) {
@@ -124,4 +125,34 @@ void heap_sort_int(int* a, size_t n) {
         swap_int(&a[0], &a[k - 1]);
         sift_down(a, k - 1, 0);
     }
+}
+
+void counting_sort_int_nonneg(int* a, size_t n, int max_val) {
+    size_t i;
+    int v;
+    int* cnt;
+    size_t idx = 0;
+
+    if (n == 0) return;
+    assert(a != NULL);
+    assert(max_val >= 0);
+
+    cnt = (int*)calloc((size_t)max_val + 1, sizeof(int));
+    assert(cnt != NULL);
+
+    /* подсчёт */
+    for (i = 0; i < n; ++i) {
+        assert(a[i] >= 0 && a[i] <= max_val);
+        ++cnt[a[i]];
+    }
+
+    /* восстановление */
+    for (v = 0; v <= max_val; ++v) {
+        int c = cnt[v];
+        while (c-- > 0) {
+            a[idx++] = v;
+        }
+    }
+
+    free(cnt);
 }
