@@ -3,7 +3,6 @@
 #include <stdlib.h> /* malloc, free */
 
 /* -------------------- Basic -------------------- */
-
 void bubble_sort_int(int* a, size_t n) {
     if (!a || n < 2) return;
     int changed = 1;
