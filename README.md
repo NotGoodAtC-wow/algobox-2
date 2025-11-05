@@ -1,7 +1,6 @@
 # AlgoBox (C) — v2
 
-[![Linux CI](https://github.com/NotGoodAtC-wow/algobox-2/actions/workflows/ci-ubuntu.yml/badge.svg)](https://github.com/NotGoodAtC-wow/algobox-2/actions/workflows/ci-ubuntu.yml)
-[![Windows CI](https://github.com/NotGoodAtC-wow/algobox-2/actions/workflows/ci-windows.yml/badge.svg)](https://github.com/NotGoodAtC-wow/algobox-2/actions/workflows/ci-windows.yml)
+[![CI](https://github.com/NotGoodAtC-wow/algobox-2/actions/workflows/cmake.yml/badge.svg)](https://github.com/NotGoodAtC-wow/algobox-2/actions/workflows/cmake.yml)
 ![License](https://img.shields.io/badge/license-MIT-informational)
 ![Language](https://img.shields.io/badge/language-C99-blue)
 
