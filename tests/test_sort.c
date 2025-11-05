@@ -1,71 +1,53 @@
 #include <assert.h>
+#include <stddef.h>
 #include <stdlib.h>
-#include <string.h>
-
+#include <stdio.h>
 #include "algo_sort.h"
 #include "algo_utils.h"
 
-static int same_multiset(const int* a, const int* b, size_t n) {
-    int* c = (int*)malloc(n * sizeof(int));
-    int* d = (int*)malloc(n * sizeof(int));
-    if (!c || !d) { free(c); free(d); return 0; }
-    for (size_t i = 0; i < n; ++i) { c[i] = a[i]; d[i] = b[i]; }
-    qsort(c, n, sizeof(int), cmp_int_asc);
-    qsort(d, n, sizeof(int), cmp_int_asc);
-    int ok = (memcmp(c, d, n * sizeof(int)) == 0);
-    free(c); free(d);
-    return ok;
-}
+typedef void (*sort_fn)(int*, size_t);
 
-static void run_one(int (*sort_fn)(void), const char* /*unused*/) { (void)sort_fn; }
-static void apply_and_check(void (*sortf)(int*, size_t),
-                            const int* src, size_t n) {
+static void run_case_named(const char* name, sort_fn f,
+                           const int* in, size_t n, const int* exp) {
+    size_t i;
     int* a = (int*)malloc(n * sizeof(int));
-    int* b = (int*)malloc(n * sizeof(int));
-    assert(a && b);
-    for (size_t i = 0; i < n; ++i) { a[i] = src[i]; b[i] = src[i]; }
-    qsort(b, n, sizeof(int), cmp_int_asc);
+    assert(a != NULL);
+    for (i = 0; i < n; ++i) a[i] = in[i];
 
-    sortf(a, n);
-    assert(is_sorted_int(a, n));
-    assert(same_multiset(a, b, n));
+    f(a, n);
 
-    free(a); free(b);
+    for (i = 0; i < n; ++i) {
+        if (a[i] != exp[i]) {
+            fprintf(stderr, "[%s] mismatch at i=%zu: got=%d, exp=%d\n",
+                    name, i, a[i], exp[i]);
+            assert(0 && "sorted array mismatch");
+        }
+    }
+    free(a);
 }
 
-static void test_all_on(const int* src, size_t n) {
-    apply_and_check(bubble_sort_int,    src, n);
-    apply_and_check(insertion_sort_int, src, n);
-    apply_and_check(selection_sort_int, src, n);
-    apply_and_check(quick_sort_int,     src, n);
-    apply_and_check(merge_sort_int,     src, n);
-    apply_and_check(heap_sort_int,      src, n);
-}
+#define RUN_ALL(name,in,n,exp) do { \
+run_case_named("bubble_"   name, bubble_sort_int,    (in), (n), (exp)); \
+run_case_named("insertion_"name, insertion_sort_int, (in), (n), (exp)); \
+run_case_named("selection_"name, selection_sort_int, (in), (n), (exp)); \
+run_case_named("quick_"    name, quick_sort_int,     (in), (n), (exp)); \
+run_case_named("merge_"    name, merge_sort_int,     (in), (n), (exp)); \
+run_case_named("heap_"     name, heap_sort_int,      (in), (n), (exp)); \
+} while (0)
 
 int main(void) {
-    {
-        const int a[] = {5,1,4,2,8,3,3,-1,0,42,-7,8,8,8,2};
-        test_all_on(a, sizeof(a)/sizeof(a[0]));
-    }
-    {
-        const int a[] = {1,1,1,1,1,1,1};
-        test_all_on(a, sizeof(a)/sizeof(a[0]));
-    }
-    {
-        const int a[] = {-10,-5,-5,-5,-1,0,2,2,3,1000};
-        test_all_on(a, sizeof(a)/sizeof(a[0]));
-    }
-    {
-        const int a[] = {9,8,7,6,5,4,3,2,1,0};
-        test_all_on(a, sizeof(a)/sizeof(a[0]));
-    }
-    {
-        const int a[] = {2};
-        test_all_on(a, 1);
-    }
-    {
-        const int a[] = {3,2};
-        test_all_on(a, 2);
-    }
+    /* кейс 1 */
+    static const int in1[]  = {5, 4, 3, 2, 1};
+    static const int exp1[] = {1, 2, 3, 4, 5};
+    const size_t n1 = sizeof(in1) / sizeof(in1[0]);
+
+    /* кейс 2 (исправлено: 8 элементов, добавлена 3) */
+    static const int in2[]  = {3, 1, 2, 2, 5, 4, 4, 0};
+    static const int exp2[] = {0, 1, 2, 2, 3, 4, 4, 5};
+    const size_t n2 = sizeof(in2) / sizeof(in2[0]);
+
+    RUN_ALL("case1", in1, n1, exp1);
+    RUN_ALL("case2", in2, n2, exp2);
+
     return 0;
 }

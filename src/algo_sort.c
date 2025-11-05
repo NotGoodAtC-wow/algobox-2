@@ -97,11 +97,10 @@ void merge_sort_int(int* a, size_t n) {
     int* tmp = (int*)malloc(n * sizeof(int));
     if (!tmp) { insertion_sort_int(a, n); return; }
     merge_rec(a, tmp, 0, (int)n - 1);
-    insertion_sort_int(a, n); /* доводка коротких блоков */
+    insertion_sort_int(a, n);
     free(tmp);
 }
 
-/* -------------------- ADVANCED: HEAPSORT (fixed) -------------------- */
 
 static void sift_down(int* a, size_t n, size_t i) {
     for (;;) {
