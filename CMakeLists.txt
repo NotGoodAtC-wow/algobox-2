@@ -17,11 +17,11 @@ add_library(algobox STATIC ${ALGOLIB_SOURCES}
         include/algo_search.h
         include/algo_math.h
         include/algo_utils.h
-        srt/algo_sort.c
+        src/algo_sort.c
         include/algo_math.h
-        srt/algo_search.c
-        srt/algo_math.c
-        srt/algo_utils.c)
+        src/algo_search.c
+        src/algo_math.c
+        src/algo_utils.c)
 target_include_directories(algobox PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # -----------------------------------------------------------------------------
